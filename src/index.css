@@ -1,0 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+
+@import "tailwindcss";
+@plugin "daisyui";
+
+.dm-sans-font{
+  font-family: "DM Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+
+/* 
+#51AF5B -> dark green
+#B3E55E -> light green
+#F7FFA3 -> yellow
+#DDDB6A -> cream
+*/
