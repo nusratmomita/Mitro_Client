@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
 import siteLogo from '../assets/siteLogo.png';
 import { Link, NavLink } from 'react-router';
-// import './Header.css';
+import './Header.css';
 import { toast } from 'react-toastify';
 import { FiLogOut } from "react-icons/fi";
-import { FaUserCircle } from "react-icons/fa";
 import { AuthContext } from '../Authentication/AuthContext';
+import { HiOutlineUserCircle } from "react-icons/hi";
 
 const Header = () => {
 
@@ -29,7 +29,7 @@ const Header = () => {
                     </div>
                     <ul
                         tabIndex={0}
-                        className="text-[#51AF5B] text-xl font-bold menu menu-sm dropdown-content bg-base-100 rounded-box shadow">
+                        className="text-[#165f1d] text-xl font-bold menu menu-sm dropdown-content bg-base-100 rounded-box shadow">
                           {
                             user && user?.email ? 
                              <>
@@ -50,12 +50,12 @@ const Header = () => {
                     </ul>
                 </div>
                 
-                <img className="hidden lg:block w-10 h-10 animate-bounce" src={siteLogo} alt="siteLogo" />
-                <Link to="/" className="text-3xl font-extrabold text-[#51AF5B]">Mitro</Link>
+                <img className="hidden lg:block w-13 h-13 animate-bounce" src={siteLogo} alt="siteLogo" />
+                <Link to="/" className="text-3xl font-extrabold text-[#165f1d]">Mitro</Link>
                 
             </div>
             <div className="navbar-center hidden lg:flex">
-                <ul className=" menu-horizontal px-1  text-[#51AF5B] text-xl font-bold">
+                <ul className=" menu-horizontal text-[#165f1d] text-xl font-bold p-5">
                 {
                     user && user?.email ? 
                     <> 
@@ -84,7 +84,7 @@ const Header = () => {
                             <h1 className='text-[#51AF5B] text-2xl font-bold'>Hi,{user?.displayName}</h1>
                         </>
                         :
-                        <FaUserCircle className="w-15 h-15 bg-white p-1 rounded-full" size={25}></FaUserCircle>
+                        <HiOutlineUserCircle className="w-15 h-15 bg-white p-1 rounded-full" size={25}></HiOutlineUserCircle>
                     }
                 </div>
                 {
