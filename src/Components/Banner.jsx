@@ -1,90 +1,106 @@
-import React from "react";
-import bannerImg1 from '../assets/bannerImg1.jfif';
-import bannerImg2 from '../assets/bannerImg2.jfif';
-import bannerImg3 from '../assets/bannerImg3.jfif';
-import bannerImg4 from '../assets/bannerImg4.jfif';
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Pagination, Navigation } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/pagination";
-import "swiper/css/navigation";
+import React, { useState } from "react";
+import { ChevronRight, Calendar, DollarSign, Brain, BookOpen, Sparkles} from "lucide-react";
+import { Link } from "react-router";
 
 const Banner = () => {
+  const [hoveredCard, setHoveredCard] = useState(null);
+
+  const cards = [
+    {
+      id: 1,
+      title: "Class Schedule Tracker",
+      description: "Never miss a class again – keep your schedule organized with smart notifications.",
+      icon: Calendar,
+      color: "from-blue-500 to-purple-600",
+      bgColor: "bg-gradient-to-br from-blue-50 to-purple-50",
+      buttonText: "Schedule Planner",
+      directTo: "/classTracker"
+    },
+    {
+      id: 2,
+      title: "Budget Tracker",
+      description: "Track your pocket money and expenses with intelligent spending insights.",
+      icon: DollarSign,
+      color: "from-green-500 to-teal-600",
+      bgColor: "bg-gradient-to-br from-green-50 to-teal-50",
+      buttonText: "Budget Tracker",
+      directTo: "/budgetTracker"
+    },
+    {
+      id: 3,
+      title: "Exam Q&A Generator",
+      description: "Generate practice questions and prepare smarter with AI-powered learning.",
+      icon: Brain,
+      color: "from-orange-500 to-red-600",
+      bgColor: "bg-gradient-to-br from-orange-50 to-red-50",
+      buttonText: "Q&A Generator",
+      directTo: "/qaGenerator"
+    },
+    {
+      id: 4,
+      title: "Study Planner",
+      description: "Break big study goals into manageable tasks with personalized road maps.",
+      icon: BookOpen,
+      color: "from-purple-500 to-pink-600",
+      bgColor: "bg-gradient-to-br from-purple-50 to-pink-50",
+      buttonText: "Study Planner",
+      directTo: "/studyPlanner"
+    }
+  ];
+
   return (
-    <section className="flex flex-col md:flex-row w-full h-screen max-w-6xl mx-auto justify-between items-center mt-15">
-      {/* Left column */}
-      <div className="relative w-full md:w-[50%] md:h-full">
-        <Swiper
-          spaceBetween={0}
-          centeredSlides={true}
-          autoplay={{ delay: 3000, disableOnInteraction: false }}
-          modules={[Autoplay, Pagination, Navigation]}
-          className="w-full h-full"
-          >
-          {[bannerImg1, bannerImg2, bannerImg3, bannerImg4].map((img, i) => (
-          <SwiperSlide key={i}>
-            <div className="relative w-full h-3/6 rounded-3xl p-3">
-              <img
-              src={img}
-              alt={`Banner ${i + 1}`}
-              className="w-full h-full object-cover rounded-2xl"
-              />
-              {/* Overlay */}
-              <div className="absolute inset-0 bg-opacity-0 hover:bg-opacity-60 flex items-center justify-center transition duration-300">
-                <p className="text-white text-2xl font-bold opacity-0 hover:opacity-100 transition duration-300">
-                Work Hard, Dream Big! 📚
-                </p>
-              </div>
-            </div>
-          </SwiperSlide>
-          ))}
-        </Swiper>
+    <section className="w-full max-w-8xl mx-auto px-4 py-8 mt-8">
+      {/* Hero Section with Enhanced Typography */}
+      <div className="text-center mb-12">
+        <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-100 to-purple-100 px-4 py-2 rounded-full mb-4">
+          <Sparkles className="w-4 h-4 text-purple-600" />
+          <span className="text-sm font-medium text-purple-800">Transform Your Academic Journey</span>
+        </div>
+        <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 bg-clip-text text-transparent mb-4">
+          Study Smarter, Not Harder
+        </h1>
+        <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          Unlock your potential with our comprehensive suite of academic tools designed for modern students
+        </p>
       </div>
 
-      {/* Right column */}
-      <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 p-6 bg-base-100 lg:-mt-30">
-        
-        <div className="card bg-base-200 shadow-md hover:shadow-xl transition h-3/4">
-          <figure>
-            <img src="https://picsum.photos/200/150?1" alt="Class Schedule" />
-          </figure>
-          <div className="card-body">
-            <h2 className="card-title">Class Schedule Tracker</h2>
-            <p>Never miss a class again – keep your schedule organized.</p>
-          </div>
-        </div>
+      <div className="flex flex-col lg:flex-row gap-8 justify-center items-center ">
+        {/* Enhanced Right Column - Feature Cards */}
+        <div className="lg:w-4/5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-2 gap-6">
+          {cards.map((card) => {
+            const IconComponent = card.icon;
+            return (
+              <div
+                key={card.id}
+                className={`group relative ${card.bgColor} rounded-2xl p-6 shadow-lg hover:shadow-2xl transform transition-all duration-500 hover:-translate-y-2 cursor-pointer border border-white/50`}
+                onMouseEnter={() => setHoveredCard(card.id)}
+                onMouseLeave={() => setHoveredCard(null)}
+              >
+                {/* Card Header */}
+                <div className="flex items-start justify-between mb-4">
+                  <div className={`p-3 rounded-xl bg-gradient-to-r ${card.color} shadow-lg transform group-hover:scale-110 transition-transform duration-300`}>
+                    <IconComponent className="w-6 h-6 text-white" />
+                  </div>
+                </div>
 
-        
-        <div className="card bg-base-200 shadow-md hover:shadow-xl transition h-3/4">
-          <figure>
-            <img src="https://picsum.photos/200/150?2" alt="Budget Tracker" />
-          </figure>
-          <div className="card-body">
-            <h2 className="card-title">Budget Tracker</h2>
-            <p>Track your pocket money and expenses with ease.</p>
-          </div>
-        </div>
+                {/* Card Content */}
+                <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-gray-700 transition-colors">
+                  {card.title}
+                </h3>
+                <p className="text-gray-600 mb-6 text-xl leading-relaxed">
+                  {card.description}
+                </p>
 
-        
-        <div className="card bg-base-200 shadow-md hover:shadow-xl transition h-3/4 -mt-20">
-          <figure>
-            <img src="https://picsum.photos/200/150?3" alt="Exam Q&A" />
-          </figure>
-          <div className="card-body">
-            <h2 className="card-title">Exam Q&A Generator</h2>
-            <p>Generate practice questions and prepare smarter.</p>
-          </div>
-        </div>
-
-       
-        <div className="card bg-base-200 shadow-md hover:shadow-xl transition h-3/4 -mt-20">
-          <figure>
-            <img src="https://picsum.photos/200/150?4" alt="Study Planner" />
-          </figure>
-          <div className="card-body">
-            <h2 className="card-title">Study Planner</h2>
-            <p>Break big study goals into manageable tasks.</p>
-          </div>
+                {/* Enhanced Button */}
+                <Link to={card.directTo}>
+                  <button className={`cursor-pointer w-[40%] whitespace-nowrap bg-gradient-to-r ${card.color} ${card.hoverColor} text-white font-semibold p-2 rounded-xl transition-all duration-300 transform group-hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center gap-2`}>
+                  <span>{card.buttonText}</span>
+                  <ChevronRight className={`w-8 h-8 transition-transform duration-300 ${hoveredCard === card.id ? 'translate-x-1' : ''}`} />
+                </button>
+                </Link>
+            </div>
+            );
+          })}
         </div>
       </div>
     </section>
