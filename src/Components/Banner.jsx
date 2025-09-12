@@ -66,7 +66,7 @@ const Banner = () => {
 
       <div className="flex flex-col lg:flex-row gap-8 justify-center items-center ">
         {/* Enhanced Right Column - Feature Cards */}
-        <div className="lg:w-4/5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-2 gap-6">
+        <div className="lg:w-4/5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-6">
           {cards.map((card) => {
             const IconComponent = card.icon;
             return (
@@ -93,7 +93,7 @@ const Banner = () => {
 
                 {/* Enhanced Button */}
                 <Link to={card.directTo}>
-                  <button className={`cursor-pointer w-[40%] whitespace-nowrap bg-gradient-to-r ${card.color} ${card.hoverColor} text-white font-semibold p-2 rounded-xl transition-all duration-300 transform group-hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center gap-2`}>
+                  <button className={`cursor-pointer  xl:w-[40%] lg:w-[100%] w-[100%] xl:whitespace-nowrap bg-gradient-to-r ${card.color} ${card.hoverColor} text-white font-semibold p-2 rounded-xl transition-all duration-300 transform group-hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center gap-2`}>
                   <span>{card.buttonText}</span>
                   <ChevronRight className={`w-8 h-8 transition-transform duration-300 ${hoveredCard === card.id ? 'translate-x-1' : ''}`} />
                 </button>

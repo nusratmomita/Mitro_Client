@@ -11,11 +11,14 @@ const Root = () => {
             {
                 location.pathname !== "*" && <Header></Header>
             }
-            <Outlet></Outlet>
+            <main className="min-h-screen">
+                <Outlet />
+            </main>
             {
                 location.pathname !== "*" && <Footer></Footer>
             }
         </div>
+        
     );
 };
 
