@@ -49,7 +49,7 @@ const Banner = () => {
   ];
 
   return (
-    <section className="w-full max-w-8xl mx-auto px-4 py-8 mt-8">
+    <section id="about" className="w-full max-w-8xl mx-auto px-4 py-8 mt-30">
       {/* Hero Section with Enhanced Typography */}
       <div className="text-center mb-12">
         <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-100 to-green-100 px-4 py-2 rounded-full mb-4">

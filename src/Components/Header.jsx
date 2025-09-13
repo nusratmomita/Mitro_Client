@@ -19,9 +19,9 @@ const Header = () => {
   };
 
   return (
-    <div className="navbar shadow-sm">
+    <div className="navbar shadow-sm fixed z-50 bg-[#efed85]">
       {/* Left Side */}
-      <div className="navbar-start">
+      <div className="navbar-start ">
         {/* Mobile Dropdown */}
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">

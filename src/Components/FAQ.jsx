@@ -31,7 +31,7 @@ const FAQ = () => {
   ];
 
     return (
-        <div className='mt-20 flex justify-center items-center flex-col'>
+        <div id="faq" className='mt-25 flex justify-center items-center flex-col'>
             <div className="inline-flex flex-row-reverse items-center gap-2 bg-gradient-to-r from-blue-100 to-green-100 px-4 py-2 rounded-full mb-4">
                 <BadgeQuestionMark className="w-8 h-8 text-green-600" />
                 <span className="text-2xl font-medium text-[#165f1d]">Got questions? We’re here to help.</span>
