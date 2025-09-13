@@ -83,18 +83,18 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 ">
+    <div className="mt-20 mb-10 min-h-screen flex items-center justify-center p-4 ">
       {/* Animated background */}
-      <div className="absolute inset-0 overflow-hidden mt-20  min-h-[200vh]">
+      <div className="absolute inset-0 overflow-hidden mt-20 min-h-[100vh]">
         <div className="hidden lg:block absolute top-40 right-40 w-50 h-50 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
-        <div className="hidden lg:block absolute bottom-20 left-40 w-50 h-50 bg-indigo-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
-        <div className="hidden lg:block absolute top-40 left-20 w-60 h-60 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
+        <div className="hidden lg:block absolute top-110 left-40 w-50 h-50 bg-indigo-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
+        <div className="hidden lg:block absolute top-40 left-20 w-50 h-50 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
       </div>
 
       <form onSubmit={handleSubmit(formSubmission, onError)}>
         <div className="relative w-full max-w-md">
           {/* Header */}
-          <div className="text-center mb-8">
+          <div className="text-center mt-20 mb-6">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-green-500 to-green-600 rounded-full mb-4 shadow-lg">
               <GraduationCap className="w-8 h-8 text-white" />
             </div>
