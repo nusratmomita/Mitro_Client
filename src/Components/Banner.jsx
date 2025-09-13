@@ -11,7 +11,7 @@ const Banner = () => {
       title: "Class Schedule Tracker",
       description: "Never miss a class again – keep your schedule organized with smart notifications.",
       icon: Calendar,
-      color: "from-blue-500 to-purple-600",
+      color: "from-green-800 to-teal-600",
       bgColor: "bg-gradient-to-br from-blue-50 to-purple-50",
       buttonText: "Schedule Planner",
       directTo: "/classTracker"
@@ -21,7 +21,7 @@ const Banner = () => {
       title: "Budget Tracker",
       description: "Track your pocket money and expenses with intelligent spending insights.",
       icon: DollarSign,
-      color: "from-green-500 to-teal-600",
+      color: "from-teal-500 to-green-800",
       bgColor: "bg-gradient-to-br from-green-50 to-teal-50",
       buttonText: "Budget Tracker",
       directTo: "/budgetTracker"
@@ -31,7 +31,7 @@ const Banner = () => {
       title: "Exam Q&A Generator",
       description: "Generate practice questions and prepare smarter with AI-powered learning.",
       icon: Brain,
-      color: "from-orange-500 to-red-600",
+      color: "from-teal-500 to-green-800",
       bgColor: "bg-gradient-to-br from-orange-50 to-red-50",
       buttonText: "Q&A Generator",
       directTo: "/qaGenerator"
@@ -41,7 +41,7 @@ const Banner = () => {
       title: "Study Planner",
       description: "Break big study goals into manageable tasks with personalized road maps.",
       icon: BookOpen,
-      color: "from-purple-500 to-pink-600",
+      color: "from-green-800 to-teal-600",
       bgColor: "bg-gradient-to-br from-purple-50 to-pink-50",
       buttonText: "Study Planner",
       directTo: "/studyPlanner"
@@ -52,11 +52,11 @@ const Banner = () => {
     <section className="w-full max-w-8xl mx-auto px-4 py-8 mt-8">
       {/* Hero Section with Enhanced Typography */}
       <div className="text-center mb-12">
-        <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-100 to-purple-100 px-4 py-2 rounded-full mb-4">
-          <Sparkles className="w-4 h-4 text-purple-600" />
-          <span className="text-sm font-medium text-purple-800">Transform Your Academic Journey</span>
+        <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-100 to-green-100 px-4 py-2 rounded-full mb-4">
+          <Sparkles className="w-4 h-4 text-green-600" />
+          <span className="text-2xl font-medium text-[#165f1d]">Transform Your Academic Journey</span>
         </div>
-        <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 bg-clip-text text-transparent mb-4">
+        <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-green-900 via-green-600 to-green-900 bg-clip-text text-transparent mb-4">
           Study Smarter, Not Harder
         </h1>
         <p className="text-xl text-gray-600 max-w-2xl mx-auto">
