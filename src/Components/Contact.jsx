@@ -40,7 +40,7 @@ const ContactMe = () => {
 
   return (
     <motion.div
-      className="mt-20 max-w-7xl mx-10 lg:mx-auto text-[#2C1250] space-y-5 mb-50"
+      className="mt-20 max-w-7xl mx-10 lg:mx-auto space-y-5 mb-50"
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
@@ -51,7 +51,7 @@ const ContactMe = () => {
 
       <div
         id="contactMe"
-        className="max-w-7xl mx-auto p-10 rounded-3xl shadow-xl mt-10 flex flex-col md:flex-row gap-10 items-start bg-white"
+        className="max-w-7xl mx-auto p-10 rounded-3xl shadow-2xl mt-10 flex flex-col md:flex-row gap-10 items-start bg-white"
       >
         {/* Form */}
         <div className="max-w-xl mx-auto px-4 w-full">

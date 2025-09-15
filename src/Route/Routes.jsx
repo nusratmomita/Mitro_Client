@@ -3,6 +3,10 @@ import Home from "../Pages/Home/Home";
 import Root from "../Root/Root" 
 import Login from "../Pages/Login/Login";
 import Register from "../Pages/Register/Register";
+import BudgetTracker from "../Pages/BudgetTracker/BudgetTracker";
+import QAGenerator from "../Pages/QAGenerator/QAGenerator";
+import StudyPlanner from "../Pages/StudyPlanner/StudyPlanner";
+import ClassTracker from "../Pages/ClassTracker/ClassTracker";
 // import ErrorPage from "../Pages/ErrorPage/ErrorPage";
 
 
@@ -20,11 +24,26 @@ export const router = createBrowserRouter([
             {
                 path: "/login",
                 Component: Login
-            }
-            ,
+            },
             {
                 path: "/register",
                 Component: Register
+            },
+            {
+                path: "/classTracker",
+                Component: ClassTracker
+            },
+            {
+                path: "/budgetTracker",
+                Component: BudgetTracker
+            },
+            {
+                path: "/qaGenerator",
+                Component: QAGenerator
+            },
+            {
+                path: "/studyPlanner",
+                Component: StudyPlanner
             }
             
         ]

@@ -31,18 +31,18 @@ const Header = () => {
           </div>
           <ul
             tabIndex={0}
-            className="text-[#165f1d] text-xl font-bold menu menu-sm dropdown-content bg-base-100 rounded-box shadow"
+            className="text-[#165f1d] text-xl font-bold menu menu-lg dropdown-content bg-base-100 rounded-box shadow w-100"
           >
             {
               user && user?.email ?
                 <>
                   <li className='navLinks'><NavLink to="/">Home</NavLink></li>
-                  <li className='navLinks lg:ml-10'><NavLink to="/classTracker">Class schedule tracker</NavLink></li>
+                  <li className='navLinks lg:ml-10'><NavLink to="/classTracker">Schedule tracker</NavLink></li>
                   <li className='navLinks lg:ml-10'><NavLink to="/budgetTracker">Budget tracker</NavLink></li>
                   <li className='navLinks lg:ml-10'><NavLink to="/qaGenerator">Q&A generator</NavLink></li>
                   <li className='navLinks lg:ml-10'><NavLink to="/studyPlanner">Study planner</NavLink></li>
                   {/* Dashboard + Logout only in dropdown */}
-                  <li className='navLinks lg:ml-10'><NavLink to="/dashboard">Dashboard</NavLink></li>
+                  {/* <li className='navLinks lg:ml-10'><NavLink to="/dashboard">Dashboard</NavLink></li>
                   <li>
                     <button
                       onClick={handleSignOut}
@@ -50,7 +50,7 @@ const Header = () => {
                     >
                       <FiLogOut /> Logout
                     </button>
-                  </li>
+                  </li> */}
                 </>
                 :
                 <>
@@ -73,7 +73,7 @@ const Header = () => {
             user && user?.email ?
               <>
                 <li className='navLinks'><NavLink to="/">Home</NavLink></li>
-                <li className='navLinks lg:ml-10'><NavLink to="/classTracker">Class schedule tracker</NavLink></li>
+                <li className='navLinks lg:ml-10'><NavLink to="/classTracker">Schedule tracker</NavLink></li>
                 <li className='navLinks lg:ml-10'><NavLink to="/budgetTracker">Budget tracker</NavLink></li>
                 <li className='navLinks lg:ml-10'><NavLink to="/qaGenerator">Q&A generator</NavLink></li>
                 <li className='navLinks lg:ml-10'><NavLink to="/studyPlanner">Study planner</NavLink></li>

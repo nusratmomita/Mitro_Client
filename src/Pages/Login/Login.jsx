@@ -10,6 +10,7 @@ import { FcGoogle } from 'react-icons/fc';
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingGoogle, setIsLoadingGoogle] = useState(false);
   const navigate = useNavigate();
   
   const { handleLogin , handleGoogleAuth } = useContext(AuthContext);
@@ -36,12 +37,12 @@ const Login = () => {
   };
 
   const handleGoogleSignUp = () => {
-      setIsLoading(true);
+      setIsLoadingGoogle(true);
       handleGoogleAuth()
       .then(() => {
         setTimeout(() => {
           toast.success('🎉 Registration successful! Welcome to Mitro!');
-          setIsLoading(false);
+          setIsLoadingGoogle(false);
           reset();
           navigate("/");
         }, 1500);
@@ -49,7 +50,7 @@ const Login = () => {
       .catch((err) => {
         console.log(err);
         toast.error("Google sign up failed.");
-        setIsLoading(false);
+        setIsLoadingGoogle(false);
       });
     };
 
@@ -157,11 +158,11 @@ const Login = () => {
                     {/* Google Sign Up */}
                     <button
                         type="button"
-                        disabled={isLoading}
+                        disabled={isLoadingGoogle}
                         onClick={handleGoogleSignUp}
                         className="w-full cursor-pointer bg-[#ecebb4] text-[#165f1d] text-xl font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
                     >
-                        {isLoading ? (
+                        {isLoadingGoogle ? (
                         <>
                             <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                             Logging in with Google...
