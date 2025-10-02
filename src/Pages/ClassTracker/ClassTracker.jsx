@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
+import ApiCustomHook  from "../../CustomHooks/ApiCustomHook";
+import { AuthContext } from "../../Authentication/AuthContext";
+import { toast } from "react-toastify";
 
-const ClassTracker = ({ onSubmit }) => {
+const ClassTracker = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const {
@@ -10,18 +13,42 @@ const ClassTracker = ({ onSubmit }) => {
     reset,
     watch,
     formState: { errors, isValid },
-  } = useForm({ mode: "onChange" });
+  } = useForm();
 
   const selectedColor = watch("color", "#3b82f6");
 
+  const axiosApi = ApiCustomHook();
+
+  const {user} = useContext(AuthContext);
+
   const submitForm = async (data) => {
     setIsSubmitting(true);
+    // console.log(data);
+
+    const addSubject = {
+      subject_name: data.subject,
+      teacher_name: data.instructor,
+      timetable: data.day,
+      color_code: data.color,
+      created_at: new Date().toISOString(),
+      created_by: user?.displayName,
+      created_by_email: user?.email,
+    }
+    console.log(addSubject);
+
     try {
-      await onSubmit(data);
+      const addNewSubject = await axiosApi.post("/subjects", addSubject);
+      // console.log(addNewSubject);
+      // console.log(addNewSubject.data);
+
+      if(addNewSubject.data.insertedId){
+        toast.success("🎊Successfully created a new subject!");
+      }
       reset();
       // Success toast could be shown here
     } catch (error) {
-      console.error("Error submitting form:", error);
+      toast.error("There is some problem in creating a new subject. Please try again");
+      console.log(error)
     } finally {
       setIsSubmitting(false);
     }
@@ -58,209 +85,209 @@ const ClassTracker = ({ onSubmit }) => {
               </p>
             </div>
 
-            <div className="space-y-6">
-              {/* Subject Name */}
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text font-semibold flex items-center gap-2">
-                    <span className="text-primary">📖</span>
-                    Subject Name
-                  </span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g., Advanced Mathematics"
-                  className={`input input-bordered w-full transition-all duration-200 focus:input-primary ${
-                    errors.subject ? "input-error" : ""
-                  }`}
-                  {...register("subject", {
-                    required: "Subject name is required",
-                    minLength: {
-                      value: 2,
-                      message: "Subject name must be at least 2 characters",
-                    },
-                    maxLength: {
-                      value: 50,
-                      message: "Subject name must be less than 50 characters",
-                    },
-                  })}
-                />
-                {errors.subject && (
-                  <label className="label">
-                    <span className="label-text-alt text-error flex items-center gap-1">
-                      <span>⚠️</span>
-                      {errors.subject.message}
-                    </span>
-                  </label>
-                )}
-              </div>
-
-              {/* Instructor */}
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text font-semibold flex items-center gap-2">
-                    <span className="text-primary">👨‍🏫</span>
-                    Instructor
-                  </span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g., Mr. Smith"
-                  className={`input input-bordered w-full transition-all duration-200 focus:input-primary ${
-                    errors.instructor ? "input-error" : ""
-                  }`}
-                  {...register("instructor", {
-                    required: "Instructor name is required",
-                    minLength: {
-                      value: 2,
-                      message: "Instructor name must be at least 2 characters",
-                    },
-                  })}
-                />
-                {errors.instructor && (
-                  <label className="label">
-                    <span className="label-text-alt text-error flex items-center gap-1">
-                      <span>⚠️</span>
-                      {errors.instructor.message}
-                    </span>
-                  </label>
-                )}
-              </div>
-
-              {/* Day and Time Row */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Day of Week */}
-                <div className="form-control">
-                  <label className="label">
+            {/* <form > */}
+              <form className="space-y-6" onSubmit={handleSubmit(submitForm)}>
+                {/* Subject Name */}
+                <div>
+                  <label className="label" htmlFor="subjectName">
                     <span className="label-text font-semibold flex items-center gap-2">
-                      <span className="text-primary">📅</span>
-                      Day
-                    </span>
-                  </label>
-                  <select
-                    className={`select select-bordered w-full transition-all duration-200 focus:select-primary ${
-                      errors.day ? "select-error" : ""
-                    }`}
-                    {...register("day", { required: "Please select a day" })}
-                  >
-                    <option value="">Choose a day</option>
-                    <option value="monday">Monday</option>
-                    <option value="tuesday">Tuesday</option>
-                    <option value="wednesday">Wednesday</option>
-                    <option value="thursday">Thursday</option>
-                    <option value="friday">Friday</option>
-                    <option value="saturday">Saturday</option>
-                    <option value="sunday">Sunday</option>
-                  </select>
-                  {errors.day && (
-                    <label className="label">
-                      <span className="label-text-alt text-error flex items-center gap-1">
-                        <span>⚠️</span>
-                        {errors.day.message}
-                      </span>
-                    </label>
-                  )}
-                </div>
-
-                {/* Time */}
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text font-semibold flex items-center gap-2">
-                      <span className="text-primary">🕐</span>
-                      Time
+                      <span className="text-primary">📖</span>
+                      Subject Name
                     </span>
                   </label>
                   <input
-                    type="time"
+                    type="text"
+                    name="subjectName"
+                    placeholder="e.g., Advanced Mathematics"
                     className={`input input-bordered w-full transition-all duration-200 focus:input-primary ${
-                      errors.time ? "input-error" : ""
+                      errors.subject ? "input-error" : ""
                     }`}
-                    {...register("time", { required: "Time is required" })}
+                    {...register("subject", {
+                      required: "Subject name is required",
+                      minLength: {
+                        value: 2,
+                        message: "Subject name must be at least 2 characters",
+                      },
+                      maxLength: {
+                        value: 50,
+                        message: "Subject name must be less than 50 characters",
+                      },
+                    })}
                   />
-                  {errors.time && (
+                  {errors.subject && (
                     <label className="label">
                       <span className="label-text-alt text-error flex items-center gap-1">
                         <span>⚠️</span>
-                        {errors.time.message}
+                        {errors.subject.message}
                       </span>
                     </label>
                   )}
                 </div>
-              </div>
 
-              {/* Color Picker */}
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text font-semibold flex items-center gap-2">
-                    <span className="text-primary">🎨</span>
-                    Subject Color
-                  </span>
-                </label>
-                <div className="flex flex-wrap gap-3">
-                  {colorOptions.map((color) => (
-                    <label key={color.value} className="cursor-pointer">
-                      <input
-                        type="radio"
-                        className="sr-only"
-                        value={color.value}
-                        {...register("color")}
-                      />
-                      <div
-                        className={`w-10 h-10 rounded-full border-4 transition-all duration-200 hover:scale-110 ${
-                          selectedColor === color.value
-                            ? "border-primary shadow-lg scale-110"
-                            : "border-base-300 hover:border-base-400"
-                        }`}
-                        style={{ backgroundColor: color.value }}
-                        title={color.name}
-                      />
-                    </label>
-                  ))}
-                </div>
-                {/* Custom Color Picker */}
-                <div className="mt-6">
+                {/* Instructor */}
+                <div className="">
                   <label className="label">
-                    <span className="label-text-alt">Or choose custom color:</span>
+                    <span className="label-text font-semibold flex items-center gap-2">
+                      <span className="text-primary">👨‍🏫</span>
+                      Instructor
+                    </span>
                   </label>
                   <input
-                    type="color"
-                    className="w-16 h-7 ml-5 rounded border-2 border-base-300 cursor-pointer"
-                    {...register("color")}
+                    type="text"
+                    placeholder="e.g., Mr. Smith"
+                    className={`input input-bordered w-full transition-all duration-200 focus:input-primary ${
+                      errors.instructor ? "input-error" : ""
+                    }`}
+                    {...register("instructor", {
+                      required: "Instructor name is required",
+                      minLength: {
+                        value: 2,
+                        message: "Instructor name must be at least 2 characters",
+                      },
+                    })}
                   />
-                </div>
-              </div>
-
-              {/* Submit Button */}
-              <div className="form-control mt-8">
-                <button
-                  type="submit"
-                  onClick={handleSubmit(submitForm)}
-                  disabled={!isValid || isSubmitting}
-                  className={`btn btn-primary btn-lg w-full transition-all duration-200 ${
-                    isSubmitting ? "loading" : ""
-                  } ${!isValid ? "btn-disabled" : "hover:scale-[1.02]"}`}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <span className="loading loading-spinner loading-sm"></span>
-                      Adding Subject...
-                    </>
-                  ) : (
-                    <>
-                      <span className="text-lg">✅</span>
-                      Add Subject
-                    </>
+                  {errors.instructor && (
+                    <label className="label">
+                      <span className="label-text-alt text-error flex items-center gap-1">
+                        <span>⚠️</span>
+                        {errors.instructor.message}
+                      </span>
+                    </label>
                   )}
-                </button>
-              </div>
-
-              {/* Form Progress Indicator */}
-              <div className="text-center">
-                <div className="text-sm text-base-content/60">
-                  Form is {isValid ? "✅ ready" : "⏳ incomplete"}
                 </div>
-              </div>
-            </div>
+
+                {/* Day and Time Row */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Day of Week */}
+                  <div className="">
+                    <label className="label">
+                      <span className="label-text font-semibold flex items-center gap-2">
+                        <span className="text-primary">📅</span>
+                        Day
+                      </span>
+                    </label>
+                    <select
+                      className={`select select-bordered w-full transition-all duration-200 focus:select-primary ${
+                        errors.day ? "select-error" : ""
+                      }`}
+                      {...register("day", { required: "Please select a day" })}
+                    >
+                      <option value="">Choose a day</option>
+                      <option value="monday">Monday</option>
+                      <option value="tuesday">Tuesday</option>
+                      <option value="wednesday">Wednesday</option>
+                      <option value="thursday">Thursday</option>
+                      <option value="friday">Friday</option>
+                      <option value="saturday">Saturday</option>
+                      <option value="sunday">Sunday</option>
+                    </select>
+                    {errors.day && (
+                      <label className="label">
+                        <span className="label-text-alt text-error flex items-center gap-1">
+                          <span>⚠️</span>
+                          {errors.day.message}
+                        </span>
+                      </label>
+                    )}
+                  </div>
+
+                  {/* Time */}
+                  <div className="">
+                    <label className="label">
+                      <span className="label-text font-semibold flex items-center gap-2">
+                        <span className="text-primary">🕐</span>
+                        Time
+                      </span>
+                    </label>
+                    <input
+                      type="time"
+                      className={`input input-bordered w-full transition-all duration-200 focus:input-primary ${
+                        errors.time ? "input-error" : ""
+                      }`}
+                      {...register("time", { required: "Time is required" })}
+                    />
+                    {errors.time && (
+                      <label className="label">
+                        <span className="label-text-alt text-error flex items-center gap-1">
+                          <span>⚠️</span>
+                          {errors.time.message}
+                        </span>
+                      </label>
+                    )}
+                  </div>
+                </div>
+
+                {/* Color Picker */}
+                <div className="">
+                  <label className="label">
+                    <span className="label-text font-semibold flex items-center gap-2">
+                      <span className="text-primary">🎨</span>
+                      Subject Color
+                    </span>
+                  </label>
+                  <div className="flex flex-wrap gap-3">
+                    {colorOptions.map((color) => (
+                      <label key={color.value} className="cursor-pointer">
+                        <input
+                          type="radio"
+                          className="sr-only"
+                          value={color.value}
+                          {...register("color")}
+                        />
+                        <div
+                          className={`w-10 h-10 rounded-full border-4 transition-all duration-200 hover:scale-110 ${
+                            selectedColor === color.value
+                              ? "border-primary shadow-lg scale-110"
+                              : "border-base-300 hover:border-base-400"
+                          }`}
+                          style={{ backgroundColor: color.value }}
+                          title={color.name}
+                        />
+                      </label>
+                    ))}
+                  </div>
+                  {/* Custom Color Picker */}
+                  <div className="mt-6">
+                    <label className="label">
+                      <span className="label-text-alt">Or choose custom color:</span>
+                    </label>
+                    <input
+                      type="color"
+                      className="w-16 h-7 ml-5 rounded border-2 border-base-300 cursor-pointer"
+                      {...register("color")}
+                    />
+                  </div>
+                </div>
+
+                {/* Submit Button */}
+                <div className=" mt-8">
+                  <button
+                    type="submit"
+                    disabled={!isValid || isSubmitting}
+                    className={`btn btn-primary btn-lg w-full transition-all duration-200 ${
+                      isSubmitting ? "loading" : ""
+                    } ${!isValid ? "btn-disabled" : "hover:scale-[1.02]"}`}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <span className="loading loading-spinner loading-sm"></span>
+                        Adding Subject...
+                      </>
+                    ) : (
+                      <>
+                        <span className="text-lg">✅</span>
+                        Add Subject
+                      </>
+                    )}
+                  </button>
+                </div>
+              </form>
+                {/* Form Progress Indicator */}
+                <div className="text-center">
+                  <div className="text-sm text-base-content/60">
+                    Form is {isValid ? "✅ ready" : "⏳ incomplete"}
+                  </div>
+                </div>
           </div>
         </div>
 

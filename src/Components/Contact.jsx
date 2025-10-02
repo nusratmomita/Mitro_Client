@@ -120,7 +120,7 @@ const ContactMe = () => {
       {/* Scroll-to-top button */}
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-        className="fixed bottom-5 right-5 p-4 bg-green-600 text-white rounded-full shadow-lg hover:bg-green-700 transition-colors"
+        className="cursor-pointer fixed bottom-5 right-5 p-4 bg-green-600 text-white rounded-full shadow-lg hover:bg-green-700 transition-colors"
       >
         ↑
       </button>
