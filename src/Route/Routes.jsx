@@ -7,6 +7,7 @@ import BudgetTracker from "../Pages/BudgetTracker/BudgetTracker";
 import QAGenerator from "../Pages/QAGenerator/QAGenerator";
 import StudyPlanner from "../Pages/StudyPlanner/StudyPlanner";
 import ClassTracker from "../Pages/ClassTracker/ClassTracker";
+import DashboardRoute from "./DashboardRoute";
 // import ErrorPage from "../Pages/ErrorPage/ErrorPage";
 
 
@@ -47,5 +48,9 @@ export const router = createBrowserRouter([
             }
             
         ]
+    },
+    {
+        path: "/dashboard",
+        Component: DashboardRoute
     }
 ])
