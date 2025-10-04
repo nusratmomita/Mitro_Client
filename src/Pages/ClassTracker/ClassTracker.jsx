@@ -97,7 +97,6 @@ const ClassTracker = () => {
                   </label>
                   <input
                     type="text"
-                    name="subjectName"
                     placeholder="e.g., Advanced Mathematics"
                     className={`input input-bordered w-full transition-all duration-200 focus:input-primary ${
                       errors.subject ? "input-error" : ""

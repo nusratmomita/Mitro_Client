@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Target, TrendingUp, PiggyBank, Calendar, Plus, Trash2, AlertCircle } from 'lucide-react';
+import ApiCustomHook from '../../CustomHooks/ApiCustomHook';
+import { toast } from 'react-toastify';
+import { AuthContext } from '../../Authentication/AuthContext';
 
 export default function BudgetPlanningForm() {
   const [planName, setPlanName] = useState('');
@@ -9,6 +12,12 @@ export default function BudgetPlanningForm() {
   const [expenses, setExpenses] = useState([
     { id: 1, category: '', amount: '', priority: 'medium' }
   ]);
+  const [isLoading , setLoading] = useState(false);
+
+  const {user} = useContext(AuthContext);
+
+
+  const axiosApi = ApiCustomHook();
 
   const expenseCategories = [
     'Food & Dining',
@@ -49,33 +58,55 @@ export default function BudgetPlanningForm() {
 
   const remainingBudget = (parseFloat(totalIncome) || 0) - totalExpenses - (parseFloat(savingsGoal) || 0);
 
-  const handleSubmit = () => {
-    if (!planName || !totalIncome) {
-      alert('Please fill in plan name and total income');
-      return;
-    }
+  const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    const budgetPlan = {
-      planName,
-      duration,
-      totalIncome: parseFloat(totalIncome),
-      savingsGoal: parseFloat(savingsGoal) || 0,
-      expenses: expenses.filter(exp => exp.category && exp.amount),
-      totalExpenses,
-      remainingBudget,
-      createdAt: new Date().toISOString()
-    };
+  if (!planName || !totalIncome) {
+    toast.error('Please fill in plan name and total income');
+    return;
+  }
 
-    console.log('Budget Plan Created:', budgetPlan);
-    alert(`Budget plan "${planName}" created successfully!`);
-    
-    // Reset form
-    setPlanName('');
-    setDuration('monthly');
-    setTotalIncome('');
-    setSavingsGoal('');
-    setExpenses([{ id: Date.now(), category: '', amount: '', priority: 'medium' }]);
+  const budgetPlan = {
+    planName,
+    duration,
+    totalIncome: parseFloat(totalIncome),
+    savingsGoal: parseFloat(savingsGoal) || 0,
+    expenses: expenses.filter(exp => exp.category && exp.amount),
+    totalExpenses,
+    remainingBudget,
+    createdAt: new Date().toISOString(),
+    created_by: user?.displayName || "Mitro",
+    created_by_email: user?.email || "mitro@user.com"
   };
+
+  if(remainingBudget < 0){
+    // toast.error("Your planned expenses and savings exceed your income. Please fix it.");
+    return;
+  }
+
+  try {
+    const response = await axiosApi.post("/budget", budgetPlan);
+
+    if(response.data.insertedId){
+      setLoading(true);
+      console.log('Budget Plan Created:', budgetPlan);
+      toast.success(`Budget plan "${planName}" created successfully!`);
+    } else {
+      toast.error("There is some problem in creating a budget plan. Please try again");
+    }
+  } catch (error) {
+    setLoading(false);
+    console.error("Error creating budget plan:", error);
+    toast.error("There was an error processing your request. Please try again.");
+  }
+
+  // Reset form
+  setPlanName('');
+  setDuration('monthly');
+  setTotalIncome('');
+  setSavingsGoal('');
+  setExpenses([{ id: Date.now(), category: '', amount: '', priority: 'medium' }]);
+};
 
   return (
     <div className="mt-30 min-h-screen p-6">
@@ -90,7 +121,7 @@ export default function BudgetPlanningForm() {
         </div>
 
         {/* Main Form Container */}
-        <div className="bg-white rounded-2xl shadow-xl p-8 border border-indigo-100">
+        <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-xl p-8 border border-indigo-100">
           
           {/* Basic Information Section */}
           <div className="mb-8">
@@ -120,7 +151,7 @@ export default function BudgetPlanningForm() {
                   Planning Duration <span className='text-red-600'>*</span>
                 </label>
                 <div className="grid grid-cols-3 gap-3">
-                  {['weekly', 'monthly', 'semester'].map(dur => (
+                  {['weekly', 'monthly', 'yearly'].map(dur => (
                     <button
                       key={dur}
                       type="button"
@@ -150,7 +181,7 @@ export default function BudgetPlanningForm() {
               {/* Total Income */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Total Expected Income (৳) *
+                  Total Expected Income (৳) <span className='text-red-600'>*</span>
                 </label>
                 <input
                   type="number"
@@ -165,8 +196,8 @@ export default function BudgetPlanningForm() {
 
               {/* Savings Goal */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                  <PiggyBank className="w-4 h-4 text-pink-500" />
+                <label className=" text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                  <PiggyBank className="w-4 h-4 text-green-900" />
                   Savings Goal (৳)
                 </label>
                 <input
@@ -190,9 +221,9 @@ export default function BudgetPlanningForm() {
               </h2>
               <button
                 onClick={addExpense}
-                className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-all shadow-md"
+                className="flex items-center gap-2 px-4 py-2 bg-[#ecebb4] hover:bg-[#165f1d] hover:text-[#ecebb4]  text-[#165f1d] rounded-lg font-bold transition-all shadow-md"
               >
-                <Plus className="w-4 h-4" />
+                <Plus className="w-4 h-4 font-bold" />
                 Add Expense
               </button>
             </div>
@@ -205,7 +236,7 @@ export default function BudgetPlanningForm() {
                       {/* Category */}
                       <div>
                         <label className="block text-xs font-semibold text-gray-700 mb-2">
-                          Category *
+                          Category <span className='text-red-600'>*</span>
                         </label>
                         <select
                           value={expense.category}
@@ -222,7 +253,7 @@ export default function BudgetPlanningForm() {
                       {/* Amount */}
                       <div>
                         <label className="block text-xs font-semibold text-gray-700 mb-2">
-                          Amount (৳) *
+                          Amount (৳) <span className='text-red-600'>*</span>
                         </label>
                         <input
                           type="number"
@@ -265,7 +296,7 @@ export default function BudgetPlanningForm() {
 
                   {/* Priority Badge */}
                   <div className="mt-3">
-                    <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
+                    <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${
                       expense.priority === 'high' 
                         ? 'bg-red-100 text-red-700'
                         : expense.priority === 'medium'
@@ -323,12 +354,14 @@ export default function BudgetPlanningForm() {
 
           {/* Submit Button */}
           <button
-            onClick={handleSubmit}
-            className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-4 rounded-xl shadow-lg transition-all transform hover:scale-105"
+            type="submit"
+            className={`w-full bg-gradient-to-r ${remainingBudget < 0 ? 'from-red-900 to-red-700 hover:from-red-700 hover:to-red-900 text-white cursor-not-allowed' : 'from-green-900 to-green-700 hover:from-green-700 hover:to-green-900 cursor-pointer shadow-lg transition-all transform hover:scale-105'} text-[#F7FFA3] font-bold py-4 rounded-xl flex items-center justify-center gap-3`}
+            disabled={remainingBudget < 0 || isLoading} // Disable the button when budget is not okay or when loading
           >
-            Create Budget Plan
+            {isLoading ? "Creating a plan..." : `${remainingBudget < 0 ? "Fix Budget Issues" : "Create Budget Plan"}`}
           </button>
-        </div>
+
+        </form>
 
         {/* Tips Card */}
         <div className="mt-6 bg-white rounded-xl shadow-md p-6 border border-indigo-100">
