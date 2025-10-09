@@ -355,7 +355,7 @@ export default function BudgetPlanningForm() {
           {/* Submit Button */}
           <button
             type="submit"
-            className={`w-full bg-gradient-to-r ${remainingBudget < 0 ? 'from-red-900 to-red-700 hover:from-red-700 hover:to-red-900 text-white cursor-not-allowed' : 'from-green-900 to-green-700 hover:from-green-700 hover:to-green-900 cursor-pointer shadow-lg transition-all transform hover:scale-105'} text-[#F7FFA3] font-bold py-4 rounded-xl flex items-center justify-center gap-3`}
+            className={`w-full bg-gradient-to-r ${remainingBudget < 0 ? 'from-red-900 to-red-700 hover:from-red-700 hover:to-red-900 text-white cursor-not-allowed' : 'from-green-900 to-green-700 hover:from-green-700 hover:to-green-900 cursor-pointer shadow-lg transition-all transform hover:scale-105fo'} text-[#F7FFA3] font-bold py-4 rounded-xl flex items-center justify-center gap-3`}
             disabled={remainingBudget < 0 || isLoading} // Disable the button when budget is not okay or when loading
           >
             {isLoading ? "Creating a plan..." : `${remainingBudget < 0 ? "Fix Budget Issues" : "Create Budget Plan"}`}

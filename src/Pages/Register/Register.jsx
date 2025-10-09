@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { User, Mail, Lock, Eye, EyeOff, GraduationCap, ImagePlusIcon,Sparkles,ArrowRight,} from 'lucide-react';
+import { User, Mail, Lock, Eye, EyeOff, GraduationCap, ImagePlusIcon,Sparkles,ArrowRight} from 'lucide-react';
 import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from 'react-router';
 import { AuthContext } from '../../Authentication/AuthContext';
