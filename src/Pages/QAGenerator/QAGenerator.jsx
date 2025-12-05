@@ -2,286 +2,289 @@ import React, { useState } from "react";
 import {
   Bot,
   Pencil,
-  CheckCircle2,
-  Zap,
-  Brain,
-  FileEdit,
-  ListChecks,
   Stars,
   Wand2,
 } from "lucide-react";
 
 export default function QAGenerator() {
   const [selectedOption, setSelectedOption] = useState(null);
-  const [difficulty, setDifficulty] = useState("Medium");
+  const [topic, setTopic] = useState("");
+  const [aiAnswer, setAiAnswer] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleContinue = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+  // for creating class wise question
+  const [selectClass , setSelectClass] = useState("");
+  const [selectSubject , setSelectSubject] = useState("");
+
+  const generateAnswer = async () => {
+    if (!topic.trim()) return alert("Please enter a topic first!");
+    setLoading(true);
+    setAiAnswer("");
+
+    try {
+      const res = await fetch("http://localhost:9000/api/answer", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ topic }),
+      });
+
+      const data = await res.json();
+      setAiAnswer(data.answer || "⚠️ No answer generated.");
+    } catch (err) {
+      console.error(err);
+      setAiAnswer("❌ Error: Could not fetch AI response.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="mt-30 p-6 flex flex-col items-center justify-center">
-      <style>{`
-        @keyframes fadeInDown {
-          from { opacity: 0; transform: translateY(-30px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeInUp {
-          from { opacity: 0; transform: translateY(30px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes float {
-          0%,100% { transform: translateY(0); }
-          50% { transform: translateY(-10px); }
-        }
-        @keyframes pulse-glow {
-          0%,100% { box-shadow: 0 0 20px rgba(81,175,91,0.3); }
-          50% { box-shadow: 0 0 30px rgba(81,175,91,0.6); }
-        }
-        .animate-fade-in-down { animation: fadeInDown 0.6s ease-out; }
-        .animate-fade-in-up { animation: fadeInUp 0.6s ease-out; }
-        .animate-float { animation: float 3s ease-in-out infinite; }
-        .animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
-      `}</style>
+    <div className="mt-20 p-6 flex flex-col items-center">
+      {/* Header */}
+      <div className="text-center mb-8">
+        <div className="flex justify-center items-center gap-4 mb-4">
+          <Stars className="w-10 h-10 text-green-800 animate-spin" />
+          <h1 className="text-3xl lg:text-4xl font-bold text-green-800 drop-shadow-sm">
+            Q&A Generator
+          </h1>
+        </div>
+        <p className="text-green-900">
+          Choose how you'd like to create your study questions
+        </p>
+      </div>
 
-      <div className="w-full max-w-6xl">
-        {/* Header */}
-        <div className="text-center mb-8 animate-fade-in-down">
-          <div className="flex justify-center items-center gap-4 mb-4">
-            <Stars className="w-10 h-10 text-green-800 animate-spin" />
-            <h1 className="text-3xl lg:text-4xl font-bold text-green-800 drop-shadow-sm">
-              Q&A Generator
-            </h1>
-          </div>
-          <p className="text-green-900">
-            Choose how you'd like to create your study questions
-          </p>
+      {/* Options */}
+      <div className="grid md:grid-cols-2 gap-8 mb-8 w-full max-w-4xl">
+        <div
+          onClick={() => setSelectedOption("ai")}
+          className={`card p-6 hover:shadow-lg cursor-pointer text-center transition-all duration-300 border-2 border-[#51AF5B] hover:border-none ${
+            selectedOption === "ai" ? "border border-green-600 scale-95" : ""
+          }`}
+        >
+          <Bot className="w-12 h-12 mx-auto mb-4 text-green-700" />
+          <h2 className="text-xl font-bold text-green-800 mb-2 flex justify-center items-center gap-2">
+            Generate with AI <Wand2 className="w-5 h-5 text-green-700" />
+          </h2>
+          <p>Let AI answer student questions from your topic. The answers will be in 4-5 lines.</p>
         </div>
 
-        {/* Options Grid */}
-        <div className="grid md:grid-cols-2 gap-8 mb-4 transition-all duration-300">
-          {/* AI Option */}
-          <div
-            onClick={() => setSelectedOption("ai")}
-            className={`card bg-base-100 shadow-2xl cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(81,175,91,0.3)] border-4 ${
-              selectedOption === "ai"
-                ? "border-[#165f1d] bg-gradient-to-br from-[#B3E55E]/10 to-[#F7FFA3]/10 animate-pulse-glow scale-95"
-                : "border-transparent"
-            }`}
-          >
-            <div
-              className={`card-body items-center text-center transition-all duration-300 ${
-                selectedOption ? "p-4" : "p-8"
-              }`}
-            >
-              <div
-                className={`w-20 h-20 rounded-full bg-[#165f1d] flex items-center justify-center mb-4 transition-all duration-500 ${
-                  selectedOption === "ai"
-                    ? "scale-110 rotate-12"
-                    : "hover:rotate-[360deg] hover:scale-110"
-                } animate-float`}
-              >
-                <Bot className="w-10 h-10 text-white" strokeWidth={2.5} />
-              </div>
-
-              <h2 className="card-title text-2xl text-[#165f1d] mb-2 flex items-center gap-2">
-                Generate with AI
-                <Wand2 className="w-5 h-5 text-[#165f1d]" />
-              </h2>
-
-              {!selectedOption && (
-                <>
-                  <p className="text-gray-600 mb-4 leading-relaxed">
-                    Let artificial intelligence create customized questions and
-                    answers from your study materials
-                  </p>
-                  <ul className="space-y-3 w-full">
-                    <li className="flex items-center gap-3 text-[#165f1d] hover:translate-x-2 transition-transform duration-200">
-                    <div className="w-7 h-7 rounded-full bg-[#B3E55E] flex items-center justify-center flex-shrink-0">
-                        <Zap className="w-4 h-4 text-[#165f1d]" />
-                    </div>
-                    <span className="font-medium text-xl">Automatic question generation</span>
-                    </li>
-                    <li className="flex items-center gap-3 text-[#165f1d] hover:translate-x-2 transition-transform duration-200">
-                    <div className="w-7 h-7 rounded-full bg-[#B3E55E] flex items-center justify-center flex-shrink-0">
-                        <Brain className="w-4 h-4 text-[#165f1d]" />
-                    </div>
-                    <span className="font-medium text-xl">Smart content analysis</span>
-                    </li>
-                    <li className="flex items-center gap-3 text-[#165f1d] hover:translate-x-2 transition-transform duration-200">
-                    <div className="w-7 h-7 rounded-full bg-[#B3E55E] flex items-center justify-center flex-shrink-0">
-                        <ListChecks className="w-4 h-4 text-[#165f1d]" />
-                    </div>
-                    <span className="font-medium text-xl">Multiple difficulty levels</span>
-                    </li>
-                    <li className="flex items-center gap-3 text-[#165f1d] hover:translate-x-2 transition-transform duration-200">
-                    <div className="w-7 h-7 rounded-full bg-[#B3E55E] flex items-center justify-center flex-shrink-0">
-                        <CheckCircle2 className="w-4 h-4 text-[#165f1d]" />
-                    </div>
-                    <span className="font-medium text-xl">Instant results</span>
-                    </li>
-                  </ul>
-                </>
-              )}
-            </div>
-          </div>
-
-          {/* Manual Option */}
-          <div
-            onClick={() => setSelectedOption("manual")}
-            className={`card bg-base-100 shadow-2xl cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(81,175,91,0.3)] border-4 ${
-              selectedOption === "manual"
-                ? "border-[#165f1d] bg-gradient-to-br from-[#B3E55E]/10 to-[#F7FFA3]/10 animate-pulse-glow scale-95"
-                : "border-transparent"
-            }`}
-          >
-            <div
-              className={`card-body items-center text-center transition-all duration-300 ${
-                selectedOption ? "p-4" : "p-8"
-              }`}
-            >
-              <div
-                className={`w-20 h-20 rounded-full bg-[#165f1d] flex items-center justify-center mb-4 transition-all duration-500 ${
-                  selectedOption === "manual"
-                    ? "scale-110 rotate-12"
-                    : "hover:rotate-[360deg] hover:scale-110"
-                } animate-float`}
-              >
-                <Pencil className="w-10 h-10 text-white" strokeWidth={2.5} />
-              </div>
-
-              <h2 className="card-title text-2xl text-[#165f1d] mb-2 flex items-center gap-2">
-                Manual Q&A
-                <FileEdit className="w-5 h-5 text-[#165f1d]" />
-              </h2>
-
-              {!selectedOption && (
-                <>
-                  <p className="text-gray-600 mb-4 leading-relaxed">
-                    Create your own questions and answers with full control over
-                    the content
-                  </p>
-                  {/* Features */}
-                  <ul className="space-y-3 w-full">
-                    <li className="flex items-center gap-3 text-[#165f1d] hover:translate-x-2 transition-transform duration-200">
-                    <div className="w-7 h-7 rounded-full bg-[#B3E55E] flex items-center justify-center flex-shrink-0">
-                        <Pencil className="w-4 h-4 text-[#165f1d]" />
-                    </div>
-                    <span className="font-medium text-xl">Custom question creation</span>
-                    </li>
-                    <li className="flex items-center gap-3 text-[#165f1d] hover:translate-x-2 transition-transform duration-200">
-                    <div className="w-7 h-7 rounded-full bg-[#B3E55E] flex items-center justify-center flex-shrink-0">
-                        <FileEdit className="w-4 h-4 text-[#165f1d]" />
-                    </div>
-                    <span className="font-medium text-xl">Personalized answers</span>
-                    </li>
-                    <li className="flex items-center gap-3 text-[#165f1d] hover:translate-x-2 transition-transform duration-200">
-                    <div className="w-7 h-7 rounded-full bg-[#B3E55E] flex items-center justify-center flex-shrink-0">
-                        <ListChecks className="w-4 h-4 text-[#165f1d]" />
-                    </div>
-                    <span className="font-medium text-xl">Flexible formatting</span>
-                    </li>
-                    <li className="flex items-center gap-3 text-[#165f1d] hover:translate-x-2 transition-transform duration-200">
-                    <div className="w-7 h-7 rounded-full bg-[#B3E55E] flex items-center justify-center flex-shrink-0">
-                        <CheckCircle2 className="w-4 h-4 text-[#165f1d]" />
-                    </div>
-                    <span className="font-medium text-xl">Save and organize</span>
-                    </li>
-                  </ul>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Difficulty Level */}
-        {selectedOption && (
-          <div className="text-center mb-6 animate-fade-in-up">
-            <p className="text-lg font-semibold mb-2 text-[#165f1d]">
-              Select Difficulty Level:
-            </p>
-            <div className="flex justify-center gap-4">
-              {["Easy", "Medium", "Hard"].map((level) => (
-                <button
-                  key={level}
-                  onClick={() => setDifficulty(level)}
-                  className={`btn rounded-full px-6 ${
-                    difficulty === level
-                      ? "bg-[#165f1d] text-white"
-                      : "bg-gray-100 text-[#165f1d]"
-                  }`}
-                >
-                  {level}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Display Selected Section */}
-        {selectedOption === "ai" && (
-          <div className="mt-8 animate-fade-in-up">
-            <h2 className="text-2xl font-bold text-[#165f1d] mb-4 text-center">
-              AI Question Generator ({difficulty})
-            </h2>
-            <div className="max-w-3xl mx-auto p-6 bg-white rounded-2xl shadow-lg border border-green-100">
-              <input
-                type="text"
-                placeholder="Enter a topic (e.g. React Hooks, World War II, Algebra)..."
-                className="input input-bordered w-full mb-4"
-              />
-              <button className="btn w-full bg-[#165f1d] hover:bg-[#0e4a15] text-white">
-                Generate Questions
-              </button>
-              <div className="mt-6 bg-green-50 rounded-xl p-4 border border-green-100">
-                <p className="text-gray-700">
-                  💡 AI-generated questions will appear here...
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {selectedOption === "manual" && (
-          <div className="mt-8 animate-fade-in-up">
-            <h2 className="text-2xl font-bold text-[#165f1d] mb-4 text-center">
-              Manual Q&A ({difficulty})
-            </h2>
-            <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg border border-green-100 p-6 space-y-6">
-              {[...Array(5)].map((_, i) => (
-                <div key={i} className="p-4 border rounded-xl bg-green-50">
-                  <p className="font-semibold text-[#165f1d] mb-3">
-                    Question {i + 1}: Sample question {i + 1}?
-                  </p>
-                  {["Option A", "Option B", "Option C", "Option D"].map(
-                    (opt, j) => (
-                      <div key={j} className="flex items-center gap-2 mb-1">
-                        <input type="radio" name={`q${i}`} />
-                        <label>{opt}</label>
-                      </div>
-                    )
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Continue Button */}
-        <div className="mt-10 text-center">
-          <button
-            onClick={handleContinue}
-            className={`btn btn-lg bg-[#165f1d] text-white border-0 hover:shadow-[0_10px_30px_rgba(81,175,91,0.5)] hover:-translate-y-2 hover:scale-105 transition-all duration-300 px-12 rounded-full text-lg ${
-              selectedOption
-                ? "opacity-100 animate-fade-in-up"
-                : "opacity-0 pointer-events-none"
-            }`}
-          >
-            Upgrade for Unlimited AI 
-            <Zap className="w-5 h-5 ml-2" />
-          </button>
+        <div
+          onClick={() => setSelectedOption("manual")}
+          className={`card p-6 hover:shadow-lg cursor-pointer text-center transition-all duration-300 border-2 border-[#51AF5B] hover:border-none ${
+            selectedOption === "manual" ? "border border-green-600 scale-95" : ""
+          }`}
+        >
+          <Pencil className="w-12 h-12 mx-auto mb-4 text-green-700" />
+          <h2 className="text-xl font-bold text-green-800 mb-2">Manual Q&A</h2>
+          <p>Answer pre-generated questions class and topic wise.</p>
         </div>
       </div>
+
+      {/* AI Mode */}
+      {selectedOption === "ai" && (
+        <div className="max-w-3xl w-full bg-white p-6 rounded-xl shadow-lg border border-green-100">
+          <input
+            type="text"
+            placeholder="Enter a topic or question..."
+            value={topic}
+            onChange={(e) => setTopic(e.target.value)}
+            className="input input-bordered w-full mb-4"
+          />
+          <button
+            onClick={generateAnswer}
+            disabled={loading}
+            className={`btn w-full bg-green-700 text-white ${
+              loading ? "opacity-70 cursor-not-allowed" : ""
+            }`}
+          >
+            {loading ? "Generating..." : "Get AI Answer"}
+          </button>
+
+          <div className="mt-6 bg-green-50 p-4 rounded-lg border border-green-100 whitespace-pre-wrap">
+            {loading ? (
+              <p className="text-gray-600 italic">✨ AI is thinking...</p>
+            ) : aiAnswer ? (
+              <p className="text-gray-700">{aiAnswer}</p>
+            ) : (
+              <p className="text-gray-700">💡 AI-generated answer will appear here...</p>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Manual Mode */}
+      {selectedOption === "manual" && (
+        <div className="max-w-3xl w-full bg-white p-6 rounded-xl shadow-lg border border-green-100">
+          <p className="text-green-800 font-bold text-center">Manual Q&A Mode</p>
+          {/* Add your manual Q&A inputs here */}
+          <div className="mt-4">
+            <h3 className="text-center text-xl font-[500]">Choose a class</h3>
+            <div className="flex justify-center items-center gap-2 mt-4">
+              <div className="bg-[#dddb6a79] p-2 border border-green-800 rounded-md cursor-pointer">
+                <h3 
+                    onClick={() => setSelectClass("6")}
+                    className={`text-green-800 text-lg font-[500] ${selectClass === "6" ? "font-[800] text-xl" : ""}`} 
+                  >
+                  Class - 6</h3>
+              </div>
+              <div className="bg-[#dddb6a79] p-2 border border-green-800 rounded-md cursor-pointer">
+                <h3 
+                    onClick={() => setSelectClass("7")}
+                    className={`text-green-800 text-lg font-[500] ${selectClass === "7" ? "font-[800] text-xl" : ""}`} 
+                  >
+                  Class - 7</h3>
+              </div>
+              <div className="bg-[#dddb6a79] p-2 border border-green-800 rounded-md cursor-pointer">
+                <h3 
+                    onClick={() => setSelectClass("8")}
+                    className={`text-green-800 text-lg font-[500] ${selectClass === "8" ? "font-[800] text-xl" : ""}`} 
+                  >
+                  Class - 8</h3>
+              </div>
+            </div>
+          </div>
+
+          {/* subjects */}
+          <div className="mt-4">
+            <h3 className="text-center text-xl font-[500]">Choose a subject</h3>
+            <div className="flex justify-center items-center gap-2 mt-4">
+              <div className="bg-[#dddb6a79] p-2 border border-green-800 rounded-md cursor-pointer">
+                <h3 
+                    onClick={() => setSelectSubject("Math")}
+                    className={`text-green-800 text-lg font-[500] ${selectSubject === "Math" ? "font-[800] text-xl" : ""}`} 
+                  >
+                  Math</h3>
+              </div>
+              <div className="bg-[#dddb6a79] p-2 border border-green-800 rounded-md cursor-pointer">
+                <h3 
+                    onClick={() => setSelectSubject("English")}
+                    className={`text-green-800 text-lg font-[500] ${selectSubject === "English" ? "font-[800] text-xl" : ""}`} 
+                  >
+                  English</h3>
+              </div>
+              <div className="bg-[#dddb6a79] p-2 border border-green-800 rounded-md cursor-pointer">
+                <h3 
+                    onClick={() => setSelectSubject("Science")}
+                    className={`text-green-800 text-lg font-[500] ${selectSubject === "Science" ? "font-[800] text-xl" : ""}`} 
+                  >
+                  Science</h3>
+              </div>
+            </div>
+          </div>
+
+          {/* 
+          5 Essential Questions (English – Class 6)
+
+Identify the verb in this sentence: She plays the guitar.
+
+Write the plural of “child”.
+
+Convert to negative: “He is happy.”
+
+What is the simple past of the word “go”?
+
+Write 3–4 lines about your favorite hobby.
+
+What are the five components of food?
+
+Name one herbivore, one carnivore, and one omnivore.
+
+What is evaporation?
+
+What is the difference between transparent and opaque objects?
+
+What is a shadow and how is it formed?
+
+
+7 Simplify: 3x + 5x – 2x.
+
+Solve: 3p – 6 = 12.
+
+Convert 25% into fraction and decimal.
+
+Find the value of –5 × 6.
+
+Name the three types of triangles based on sides.
+
+Change to passive voice: He wrote a letter.
+
+Identify the subordinate clause: “I will call you when I reach home.”
+
+Write the past participle of “eat”.
+
+Write a notice about a school drawing competition.
+
+Convert to future tense: “She cooks food.”
+
+What is photosynthesis?
+
+What is the difference between acids and bases?
+
+Name two good conductors and two insulators.
+
+What is respiration?
+
+Define climate.
+
+8 Solve: 2x + 5 = 17.
+
+Find the square root of 144.
+
+Express 1/27 in exponential form.
+
+What is the perimeter of a square of side 11 cm?
+
+Convert 0.125 into a fraction.
+
+Change to indirect speech: He said, “I am tired.”
+
+Convert to passive: The teacher praised the student.
+
+Write a short story on “Lost and Found”.
+
+Identify the adverb: “She quickly finished her work.”
+
+Write a formal letter to your principal requesting leave.
+
+Name two metals and two non-metals.
+
+What is friction?
+
+Draw and label the structure of a plant cell (or describe it).
+
+Define force.
+
+What is asexual reproduction?
+*/}
+          {
+            selectClass === "6" && selectSubject === "Math" && (
+              <div>
+                <div>
+                  <h3>1. What is the LCM of 6 and 8?</h3>
+                  <textarea className="mt-4 border border-[#51AF5B] p-2 rounded-md mb-4" name="answer" id="answer" placeholder="Write your answer here.." cols={80} rows={5}></textarea>
+                </div>
+                <div>
+                  <h3>2. Convert 3.75 into a fraction.</h3>
+                  <textarea className="mt-4 border border-[#51AF5B] p-2 rounded-md mb-4" name="answer" id="answer" placeholder="Write your answer here.." cols={80} rows={5}></textarea>
+                </div>
+                <div>
+                  <h3>3. Simplify the fraction: 12/36.</h3>
+                  <textarea className="mt-4 border border-[#51AF5B] p-2 rounded-md mb-4" name="answer" id="answer" placeholder="Write your answer here.." cols={80} rows={5}></textarea>
+                </div>
+                <div>
+                  <h3>4. A rectangle has length 8 cm and breadth 4 cm. What is its perimeter?</h3>
+                  <textarea className="mt-4 border border-[#51AF5B] p-2 rounded-md mb-4" name="answer" id="answer" placeholder="Write your answer here.." cols={80} rows={5}></textarea>
+                </div>
+                <div>
+                  <h3>5. Write any two integers between –5 and 5.</h3>
+                  <textarea className="mt-4 border border-[#51AF5B] p-2 rounded-md mb-4" name="answer" id="answer" placeholder="Write your answer here.." cols={80} rows={5}></textarea>
+                </div>
+              </div>
+
+            )
+          }
+        </div>
+      )}
     </div>
   );
 }
